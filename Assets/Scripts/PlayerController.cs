@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 	public float speed = 400f;
-	public float jumppower = 1f;
+	public float jumppower = 400f;
 	public bool onGround = false;
 
 	// Use this for initialization
