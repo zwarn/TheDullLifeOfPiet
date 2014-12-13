@@ -7,9 +7,11 @@ public class PlayerController : MonoBehaviour {
 	public float jumppower = 400f;
 	public bool onGround = false;
 
+	TextureRotator tr;
+
 	// Use this for initialization
 	void Start () {
-	
+		tr = GameObject.FindGameObjectWithTag("bg").GetComponent<TextureRotator>();
 	}
 	
 	// Update is called once per frame
@@ -35,7 +37,9 @@ public class PlayerController : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D coll) {
 
 		GameObject.Destroy (coll.gameObject);
-		//Insert Function here!
+		tr.EnterRainbowMode();
+		speed = 500;
+		jumppower = 500;
 
 	}
 }

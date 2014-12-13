@@ -10,14 +10,17 @@ public class TextureRotator : MonoBehaviour
 		public Texture2D originalTexture;
 		private float timePassed;
 		private int currentTexture;
+		private GameObject[] tiles;
 
-		public void EnterRainbowMode() {
-		rainbowMode = true;
-	    }
+		public void EnterRainbowMode ()
+		{
+				rainbowMode = true;
+		}
 
-		public void LeaveRainbowMode() {
-		rainbowMode = false;
-		RenderCurrentTexture();
+		public void LeaveRainbowMode ()
+		{
+				rainbowMode = false;
+				RenderCurrentTexture ();
 		}
 
 		// Use this for initialization
@@ -25,7 +28,8 @@ public class TextureRotator : MonoBehaviour
 		{
 				timePassed = 0f;
 				currentTexture = 0;
-				originalTexture = (Texture2D)renderer.material.mainTexture;
+				Renderer r = GetComponentInChildren<Renderer> ();
+				originalTexture = (Texture2D)r.material.mainTexture;
 				RenderCurrentTexture ();			
 		}
 	
@@ -38,8 +42,8 @@ public class TextureRotator : MonoBehaviour
 								timePassed -= swapEverySeconds;
 								NextTexture ();
 						}
-				}
-		else RenderCurrentTexture();
+				} else
+						RenderCurrentTexture ();
 		
 		}
 
@@ -71,13 +75,17 @@ public class TextureRotator : MonoBehaviour
 
 		void RenderCurrentTexture ()
 		{
+
+				Texture2D t = new Texture2D (1, 1);
 				if (rainbowMode) {
-						if (textures.Length > 0) {
-								renderer.material.mainTexture = textures [currentTexture];
-						}
+						
+						t = textures [currentTexture];
+					
+				} else {
+						t = originalTexture;
 				}
-				else {
-						renderer.material.mainTexture = originalTexture;
+				foreach (Renderer r in GetComponentsInChildren<Renderer>()) {
+						r.material.mainTexture = t;
 				}
 		}
 }

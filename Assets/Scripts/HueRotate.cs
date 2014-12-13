@@ -69,7 +69,8 @@ public class HueRotate : MonoBehaviour
 				if (update) {
 						update = false;
 						rotator.ClearTextures ();
-						Texture2D inTex = (Texture2D)renderer.sharedMaterial.mainTexture;
+						Renderer r = GetComponentInChildren<Renderer> ();
+						Texture2D inTex = (Texture2D)r.sharedMaterial.mainTexture;
 						for (int texIndex = 0; texIndex < numTextures; texIndex++) {
 								float ang = texIndex * repeatEveryPixels / numTextures;
 								rotator.AddTexture (GenTexture (inTex, ang));
