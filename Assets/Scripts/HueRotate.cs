@@ -1,20 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[ExecuteInEditMode]
 public class HueRotate : MonoBehaviour
 {
 		public float rotAngle;
-		private Texture2D newTex;
-		private Texture2D origTex;
-		private float currAngle;
-		private int frameCounter;
+		public bool update = false;
+		TextureRotator rotator;
 
 		void Start ()
 		{
-				print (renderer.material.mainTexture);
-				origTex = (Texture2D)renderer.material.mainTexture;
-				newTex = new Texture2D (origTex.width, origTex.height);
-				currAngle = 0;
+				rotator = GetComponent<TextureRotator> ();		
 		}
 
 		Color ToRainbowRGB (float f)
@@ -69,12 +65,18 @@ public class HueRotate : MonoBehaviour
 
 		void Update ()
 		{
-				currAngle += rotAngle * Time.deltaTime;
-				frameCounter++;
-				if (frameCounter % 100 == 0) {
-						HueRot (origTex, newTex, currAngle);
-						renderer.material.mainTexture = newTex;
+				if (update) {
+						update = false;
+						rotator.AddTexture (GenTexture (rotAngle));
 				}
+		}
+
+		Texture2D GenTexture (float angle)
+		{
+				Texture2D inTex = (Texture2D)rotator.textures [0];
+				Texture2D outTex = new Texture2D (inTex.width, inTex.height);
+				HueRot (inTex, outTex, angle);
+				return outTex;
 		}
 
 		void HueRot (Texture2D inTex, Texture2D outTex, float angle)
