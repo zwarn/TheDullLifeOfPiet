@@ -1,4 +1,6 @@
 ﻿Shader "Custom/Rainbow" {
+
+
          SubShader {
             Pass {
 
@@ -17,7 +19,7 @@
     {
         v2f o;
         o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
-        o.color = v.vertex * 0.5 + 0.5;
+        o.color = v.vertex * 4;
         return o;
     }
 
