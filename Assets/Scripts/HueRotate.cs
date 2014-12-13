@@ -4,7 +4,8 @@ using System.Collections;
 [ExecuteInEditMode]
 public class HueRotate : MonoBehaviour
 {
-		public float rotAngle;
+		public int numTextures = 10;
+		public int repeatEveryPixels = 1000;
 		public bool update = false;
 		TextureRotator rotator;
 
@@ -60,22 +61,26 @@ public class HueRotate : MonoBehaviour
 
 		float PixelParam (int x, int y, float angle)
 		{
-				return ((x + y + angle) % 1000) / 1000;
+				return ((x + y + angle) % repeatEveryPixels) / repeatEveryPixels;
 		}
 
 		void Update ()
 		{
 				if (update) {
 						update = false;
-						rotator.AddTexture (GenTexture (rotAngle));
+						rotator.ClearTextures ();
+						Texture2D inTex = (Texture2D)renderer.sharedMaterial.mainTexture;
+						for (int texIndex = 0; texIndex < numTextures; texIndex++) {
+								float ang = texIndex * repeatEveryPixels / numTextures;
+								rotator.AddTexture (GenTexture (inTex, ang));
+						}
 				}
 		}
 
-		Texture2D GenTexture (float angle)
+		Texture2D GenTexture (Texture2D inTex, float angle)
 		{
-				Texture2D inTex = (Texture2D)rotator.textures [0];
 				Texture2D outTex = new Texture2D (inTex.width, inTex.height);
-				HueRot (inTex, outTex, angle);
+				HueRot (inTex, outTex, angle); 
 				return outTex;
 		}
 
