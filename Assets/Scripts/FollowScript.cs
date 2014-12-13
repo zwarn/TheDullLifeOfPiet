@@ -11,6 +11,7 @@ public class FollowScript : MonoBehaviour {
 		Vector3 target = new Vector3(toFollow.transform.position.x,
 		                             toFollow.transform.position.y,
 		                             transform.position.z);
-		transform.position = Vector3.Lerp (transform.position, target, camSpeed * Time.deltaTime);
+		//transform.position = Vector3.Lerp (transform.position, target, camSpeed * Time.deltaTime);
+		transform.position = target;
 	}
 }
