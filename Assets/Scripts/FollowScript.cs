@@ -25,8 +25,8 @@ public class FollowScript : MonoBehaviour {
 		transform.position = target;
 
 		foreach (ParallexScrollingEntry entry in parallex) {
-			entry.plane.transform.position = toFollow.transform.position - Vector3.Scale (toFollow.transform.position, entry.scrollSpeed);
-			Debug.Log(entry.scrollSpeed);
+			Vector3 newPosition = toFollow.transform.position - Vector3.Scale (toFollow.transform.position, entry.scrollSpeed);
+			entry.plane.transform.position = new Vector3(newPosition.x, newPosition.y, entry.plane.transform.position.z);
 		}
 	}
 }

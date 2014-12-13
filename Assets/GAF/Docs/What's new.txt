@@ -1,0 +1,8 @@
+GAF: Flash to Unity3D
+Version 3.10
+
+1) Final movie clip objects system.
+2) New converter settings.
+3) Converter improvements.
+4) Shader fixes.
+5) Bugs fixes.
