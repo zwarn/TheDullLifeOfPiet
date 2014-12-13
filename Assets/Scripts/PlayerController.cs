@@ -30,6 +30,12 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 
+	}
+
+	void OnTriggerEnter2D(Collider2D coll) {
+
+		GameObject.Destroy (coll.gameObject);
+		//Insert Function here!
 
 	}
 }
