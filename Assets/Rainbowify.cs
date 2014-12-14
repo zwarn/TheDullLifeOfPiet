@@ -5,7 +5,6 @@ public class Rainbowify : MonoBehaviour
 {
 
 		public Material targetMaterial;
-
 		private Shader normalShader;
 		private Shader rainbowShader;
 
@@ -14,7 +13,7 @@ public class Rainbowify : MonoBehaviour
 		{
 				normalShader = Shader.Find ("Sprites/Default");
 				rainbowShader = Shader.Find ("rainbow");
-		}	
+		}
 	
 		void OnDestroy ()
 		{
@@ -34,6 +33,7 @@ public class Rainbowify : MonoBehaviour
 		public void NoRainbows ()
 		{
 				targetMaterial.shader = normalShader;
+				//targetMaterial.shader = rainbowShader;
 		}
 		
 		
