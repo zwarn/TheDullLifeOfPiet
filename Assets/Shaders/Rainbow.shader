@@ -46,7 +46,7 @@
 			
 			float3 toRainbowRGB (float f) {
 				f = f - floor(f);
-				float a = (1.0f - f) * 6f;
+				float a = (1.0 - f) * 6.0;
 				int X = a;
 				float Y = a - X;
 				float3 rgb = float3(0,0,0);			
