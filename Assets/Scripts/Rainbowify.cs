@@ -5,14 +5,17 @@ public class Rainbowify : MonoBehaviour
 {
 
 		public Material targetMaterial;
+		public Material[] warpMaterials;
 		private Shader normalShader;
 		private Shader rainbowShader;
+		private Shader warpShader;
 
 		// Use this for initialization
 		void Start ()
 		{
-				normalShader = Shader.Find ("Sprites/Default");
+				normalShader = Shader.Find ("Transparent/Diffuse");
 				rainbowShader = Shader.Find ("rainbow");
+				warpShader = Shader.Find ("Rainwarp");				
 		}
 	
 		void OnDestroy ()
@@ -21,8 +24,11 @@ public class Rainbowify : MonoBehaviour
 		}
 		
 		public void Rainbows ()
-		{
-				targetMaterial.shader = rainbowShader;					
+		{					
+				targetMaterial.shader = rainbowShader;			
+				foreach (Material m in warpMaterials) {				
+						m.shader = warpShader;
+				}						
 		}
 		
 		public void SetSpeed (float speed)
@@ -34,6 +40,9 @@ public class Rainbowify : MonoBehaviour
 		{
 				targetMaterial.shader = normalShader;
 				//targetMaterial.shader = rainbowShader;
+				foreach (Material m in warpMaterials) {						
+						m.shader = normalShader;
+				}		
 		}
 		
 		

@@ -4,7 +4,10 @@
 		_PerSec ("Rainbows per second", Float) = 1
 		_PerX ("Rainbows per x", Int) = 1
 		_PerXb ("Rainbows per x (building)", Int) = -1
-		_PerY ("Rainbows per y", Float) = 1.3
+		_PerY ("Rainbows per y", Float) = 1.3	
+		_XS ("Warp X Scale", Float) = 6.29
+		_YS ("Warp Y Scale", Float) = 1.0
+		_Speed ("Warp Speed", Float) = 1.0
 	}
 	
 	SubShader {
@@ -20,6 +23,9 @@
 			float _PerX;
 			float _PerXb;
 			float _PerY;
+			float _XS;
+			float _YS;
+			float _Speed;
 			
 			struct inV {
 				float4 v : POSITION;
@@ -43,7 +49,7 @@
 				float a = (1.0f - f) * 6f;
 				int X = a;
 				float Y = a - X;
-				float3 rgb;			
+				float3 rgb = float3(0,0,0);			
 				switch (X) {
 				case 0:
 						rgb = float3(1.0,Y,0.0);
@@ -72,8 +78,11 @@
 		}
 		
 		float4 frag(outV i) : COLOR {
-				float2 uv = i.tex.xy * _MainTex_ST.xy + _MainTex_ST.zw;
-				float4 tex = tex2D(_MainTex, saturate(uv));
+				float2 xy = i.tex.xy * _MainTex_ST.xy + _MainTex_ST.zw;
+				float distort = cos(xy.x*_XS);
+				float timeFactor = sin(_Time.y * _Speed);
+				xy += float2(0.0, distort*_YS*timeFactor);
+				float4 tex = tex2D(_MainTex, saturate(xy));
 				bool building = (tex.w > 0.8);
 				float t = - _Time.y * _PerSec;
 				float y = i.tex.y * _PerY;

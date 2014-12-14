@@ -1,80 +1,61 @@
 ﻿Shader "Rainwarp" {
- 
-    Properties {
- 
-        _MainTex ("Base (RGB)", 2D) = "white" {}
-        _size ("Object Size", Float) = 10.0 
-    }
- 
-    SubShader {
- 
-        Tags { "RenderType"="AlphaTest" }
- 
-        //LOD 200
-        
-       
-        Pass {
- 
-            CGPROGRAM
- 
-                #pragma vertex vert
- 
-                #pragma fragment frag
- 
-                #include "UnityCG.cginc"
-         
-                struct v2f {
- 
-                    float4 pos : SV_POSITION;
- 
-                    float2 uv_MainTex : TEXCOORD0;
- 
-                };
-           
-                float4 _MainTex_ST;
-         
-                v2f vert(appdata_base v) {
- 
-                    v2f o;
- 
-                    //o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
- 
-                    //Curvature vertex modification
- 
-                    float4 pos = mul(UNITY_MATRIX_MV, v.vertex);
- 
-                    float distanceSquared = pos.x * pos.x + pos.z * pos.z;
-             
-  					float size  = 100;
-        			float size2 = size*size;
-       
- 
-                    pos.y -= size - sqrt(max(1.0 - distanceSquared / size2, 0.0)) * 500;
- 
-                    o.pos = mul(UNITY_MATRIX_P, pos);
- 
-                    //
-                   
-                    o.uv_MainTex = TRANSFORM_TEX(v.texcoord, _MainTex);
- 
-                    return o;
- 
-                }
-       
-                sampler2D _MainTex;
-           
-                float4 frag(v2f IN) : COLOR {
- 
-                    half4 c = tex2D (_MainTex, IN.uv_MainTex);
- 
-                    return c;
- 
-                }
- 
-            ENDCG
- 
-        }
- 
-    }
- 
+	Properties {
+		_MainTex ("Texture", 2D) = "white"
+		_XS ("X Scale", Float) = 8.8
+		_YS ("Y Scale", Float) = 0.08
+		_Speed ("Speed", Float) = 1.0		
+	}	
+	
+	SubShader {
+		Pass {			
+			CGPROGRAM
+
+			#pragma fragment frag
+			#pragma vertex vert
+
+			sampler2D _MainTex;
+			float4 _MainTex_ST;
+			
+			float _XS;
+			float _YS;
+			float _Speed;
+							
+			struct vIn {
+				float4 vertex : POSITION;
+				float4 tex : TEXCOORD0;
+			};
+			
+			struct vOut {
+				float4 pos : SV_POSITION;
+				float2 tex : TEXCOORD0;				
+			};
+			
+			vOut vert (vIn i) {
+				vOut o;
+				o.pos = mul(UNITY_MATRIX_MVP, i.vertex);
+//				float distort = cos(i.vertex.x*_XS);
+//				distort = 0.5 - 0.5 * distort;
+				o.tex = i.tex.xy; // + float2(0.0, distort*_YS);				
+				return o;
+			}
+			
+			float4 frag (vOut i) : COLOR {
+				float2 xy = i.tex * _MainTex_ST.xy + _MainTex_ST.zw;
+				float distort = cos(xy.x*_XS);
+				float timeFactor = sin(_Time.y * _Speed);
+				float2 distorted = xy + float2(0.0, distort*_YS*timeFactor);
+				float4 tex = tex2D(_MainTex, saturate(distorted));
+				if (tex.a < 0.5 || 
+					distorted.y<0.0 ||
+					distorted.y>1.0 || 
+					distorted.x<0.0 ||
+					distorted.x>1.0 ) {
+					discard;
+				}
+				return float4(1,1,1,1);
+			}
+																																	
+			ENDCG
+		}
+	}
 }

@@ -37,8 +37,20 @@ Material:
     m_Floats:
       data:
         first:
+          name: _Speed
+        second: 1
+      data:
+        first:
           name: _Parallax
         second: .0199999996
+      data:
+        first:
+          name: _XS
+        second: 8.80000019
+      data:
+        first:
+          name: _YS
+        second: .0799999982
     m_Colors:
       data:
         first:
