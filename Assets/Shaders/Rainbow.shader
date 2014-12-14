@@ -1,8 +1,8 @@
 ﻿Shader "rainbow" {
 	Properties {
-		_Color ("Color Tint", Color) = (1.0, 1.0, 1.0, 1.0)
 		_MainTex ("Texture", 2D) = "white" {}
-		_Speed ("Speed", Range(0.0, 30.0)) = 5.0
+		_Speed ("Speed", Range(0.1, 30.0)) = 5.0
+		_RainbowLen ("Rainbow Length", Range(0.2, 5.0)) = 1.0
 	}
 	
 	SubShader {
@@ -11,11 +11,11 @@
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma target 3.0
-			
-			float4 _Color;
+		
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
 			float _Speed;
+			float _RainbowLen;
 			
 			struct inV {
 				float4 v : POSITION;
@@ -34,7 +34,7 @@
 				return o;
 			}
 			
-			float4 toRainbowRGB (float f) {
+			float3 toRainbowRGB (float f) {
 				float a = (1.0f - f) * 5f;
 				int X = a;
 				float Y = a - X;
@@ -60,7 +60,7 @@
 						break;
 				}
 		
-				return float4(rgb, 1.0);
+				return rgb;
 		}
 		
 		float4 frag(outV i) : COLOR {
@@ -68,14 +68,16 @@
 				bool building = (tex.w > 0.8);
 				float param;
 				float3 rgb;
+				float xy;
 				if (building) {
-					param = 10+i.tex.y - i.tex.x + _Time.x*_Speed;	
+					param = 10+i.tex.y - i.tex.x;
 				}
 				else  {
-					param = i.tex.y + i.tex.x + _Time.x*_Speed;	
-				}				
-				int p = param;
-				rgb = toRainbowRGB(param-p);
+					param = (i.tex.y + i.tex.x);	
+				}								
+				float realParam = param / _RainbowLen + _Time.x * _Speed;
+				int p = realParam;
+				rgb = toRainbowRGB(realParam-p);
 				if (building) {
 					rgb*=0.7;
 				}
