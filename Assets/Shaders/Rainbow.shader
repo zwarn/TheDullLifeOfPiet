@@ -9,13 +9,14 @@
 		_YS ("Warp Y Scale", Float) = 1.0
 		_Speed ("Warp Speed", Float) = 1.0
 	}
-	
+	 
 	SubShader {
 		Pass {
 			CGPROGRAM
+			#include "Rainbow.cginc"
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma target 3.0
+			#pragma target 3.0 
 		
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
@@ -42,40 +43,7 @@
 				o.v = mul(UNITY_MATRIX_MVP, i.v);
 				o.tex = i.tex;
 				return o;
-			}
-			
-			float3 toRainbowRGB (float f) {
-				f = f - floor(f);
-				float a = (1.0 - f) * 6.0;
-				int X = a;
-				float Y = a - X;
-				float3 rgb = float3(0,0,0);			
-				switch (X) {
-				case 0:
-						rgb = float3(1.0,Y,0.0);
-						break;
-				case 1:
-						rgb = float3(1.0-Y,1.0,0.0);
-						break;
-				case 2:
-						rgb = float3(0.0,1.0,Y);
-						break;
-				case 3:
-						rgb = float3(0.0,1.0-Y,1.0);
-						break;
-				case 4:
-						rgb = float3(Y,0.0,1.0);
-						break;
-				case 5:
-						rgb = float3(1.0,0.0,1.0-Y);
-						break;
-				case 6: 
-						rgb = float3(1.0,0.0,0.0);
-						break;
-				}
-		
-				return rgb;
-		}
+			}						
 		
 		float4 frag(outV i) : COLOR {
 				float2 xy = i.tex.xy * _MainTex_ST.xy + _MainTex_ST.zw;
@@ -93,9 +61,12 @@
 				else  {
 					x = i.tex.x * _PerX;
 				}								
-				float param = t + x + y;
+				float param = 0.0;
 				if (!building) {
-					param -= 2*t + abs(sin(radians(x*360)));
+					param = x + y - t - abs(sin(radians(x*360)));
+				}
+				else { 
+					param = x + y + t;
 				}
 				float3 rgb = toRainbowRGB(param);
 				if (building) {

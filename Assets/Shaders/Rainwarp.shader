@@ -3,15 +3,17 @@
 		_MainTex ("Texture", 2D) = "white"
 		_XS ("X Scale", Float) = 8.8
 		_YS ("Y Scale", Float) = 0.08
-		_Speed ("Speed", Float) = 1.0		
+		_Speed ("Speed", Float) = 1.0
+		_ColorSpeed	("Color Speed", Float) = 1.0	
 	}	
 	
 	SubShader {
 		Pass {			
 			CGPROGRAM
-
+			#include "Rainbow.cginc"
 			#pragma fragment frag
 			#pragma vertex vert
+			#pragma target 3.0
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
@@ -19,6 +21,7 @@
 			float _XS;
 			float _YS;
 			float _Speed;
+			float _ColorSpeed;
 							
 			struct vIn {
 				float4 vertex : POSITION;
@@ -52,7 +55,7 @@
 					distorted.x>1.0 ) {
 					discard;
 				}
-				return float4(1,1,1,1);
+				return float4(toRainbowRGB(_Time.y*_ColorSpeed),1);
 			}
 																																	
 			ENDCG
