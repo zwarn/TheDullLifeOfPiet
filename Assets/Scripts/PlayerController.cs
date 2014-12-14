@@ -16,8 +16,10 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		rigidbody2D.velocity = new Vector2(Input.GetAxis("Horizontal") * speed * Time.deltaTime,
-		                                   rigidbody2D.velocity.y);
+//		rigidbody2D.velocity = new Vector2(Input.GetAxis("Horizontal") * speed * Time.deltaTime,
+//		                                   rigidbody2D.velocity.y);
+
+		rigidbody2D.AddForce (new Vector2 (Input.GetAxis ("Horizontal") * speed * Time.deltaTime, 0));
 
 		RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector3.down, 1.45f, 1 << LayerMask.NameToLayer("Map"));
 		if (hit.collider != null) {
