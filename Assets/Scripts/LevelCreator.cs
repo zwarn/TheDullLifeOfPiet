@@ -7,14 +7,19 @@ public class LevelCreator : MonoBehaviour {
 	public float size = 1;
 	public GameObject block;
 	public GameObject player;
+	public GameObject map;
+	public GameObject cactus;
 
 	public int range = 30;
 	public int lastHeight = 0;
+	public float cactusProp = 1/100;
+
+	public bool reset = false;
 
 
 	// Use this for initialization
 	void Start () {
-
+		resetMap ();
 		while (player.transform.position.x + range > toCreate) {
 			createBlock();
 		}
@@ -23,6 +28,10 @@ public class LevelCreator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (reset) {
+			resetMap();
+			reset = false;
+		}
 		while (player.transform.position.x + range > toCreate) {
 			createBlock();
 		}
@@ -43,9 +52,27 @@ public class LevelCreator : MonoBehaviour {
 		}
 
 		
-		Instantiate (block, new Vector3 (toCreate, lastHeight + delta, 0), Quaternion.identity);
+		GameObject blockObject = (GameObject) Instantiate (block, new Vector3 (toCreate, lastHeight + delta, 0), Quaternion.identity);
+		blockObject.name = "Block";
+		blockObject.transform.parent = map.transform;
+
+		value = Random.Range (0f, 1f);
+		if (value < cactusProp) {
+			GameObject cactusObject = (GameObject) Instantiate (cactus, new Vector3 (toCreate, lastHeight + delta + 1 , 0), Quaternion.identity);
+			cactusObject.name = "Block";
+			cactusObject.transform.parent = map.transform;
+		}
+
 		lastHeight = lastHeight + delta;
 		toCreate++;
 
+	}
+
+	public void resetMap() {
+		for (int i = 0; i < map.transform.childCount; i++) {
+			Destroy(map.transform.GetChild(i).gameObject);
+		}
+		toCreate = 0;
+		lastHeight = 0;
 	}
 }
