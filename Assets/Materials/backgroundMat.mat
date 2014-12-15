@@ -27,10 +27,6 @@ Material:
         second: 0
       data:
         first:
-          name: _Speed
-        second: 1
-      data:
-        first:
           name: _PerX
         second: 1
       data:
@@ -44,6 +40,10 @@ Material:
       data:
         first:
           name: _PerSec
+        second: 1
+      data:
+        first:
+          name: _Speed
         second: 1
       data:
         first:

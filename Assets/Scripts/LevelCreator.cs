@@ -4,7 +4,7 @@ using System.Collections;
 public class LevelCreator : MonoBehaviour {
 
 	public int toCreate = 3;
-	public float size = 1;
+	public float size = 1f;
 	public GameObject block;
 	public GameObject player;
 	public GameObject map;
@@ -12,7 +12,8 @@ public class LevelCreator : MonoBehaviour {
 
 	public int range = 30;
 	public int lastHeight = 0;
-	public float cactusProp = 1/100;
+	public float cactusProp = 0.01f;
+	public float gapProp = 0.1f;
 
 	public bool reset = false;
 
@@ -51,16 +52,20 @@ public class LevelCreator : MonoBehaviour {
 			delta = -1;
 		}
 
-		
-		GameObject blockObject = (GameObject) Instantiate (block, new Vector3 (toCreate, lastHeight + delta, 0), Quaternion.identity);
-		blockObject.name = "Block";
-		blockObject.transform.parent = map.transform;
-
 		value = Random.Range (0f, 1f);
-		if (value < cactusProp) {
-			GameObject cactusObject = (GameObject) Instantiate (cactus, new Vector3 (toCreate, lastHeight + delta + 1 , 0), Quaternion.identity);
-			cactusObject.name = "Block";
-			cactusObject.transform.parent = map.transform;
+		if (value < gapProp) {
+
+		} else {
+			GameObject blockObject = (GameObject) Instantiate (block, new Vector3 (toCreate, lastHeight + delta, 0), Quaternion.identity);
+			blockObject.name = "Block";
+			blockObject.transform.parent = map.transform;
+			
+			value = Random.Range (0f, 1f);
+			if (value < cactusProp) {
+				GameObject cactusObject = (GameObject) Instantiate (cactus, new Vector3 (toCreate, lastHeight + delta + 1 , 0), Quaternion.identity);
+				cactusObject.name = "Block";
+				cactusObject.transform.parent = map.transform;
+			}
 		}
 
 		lastHeight = lastHeight + delta;
