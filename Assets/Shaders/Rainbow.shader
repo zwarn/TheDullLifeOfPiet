@@ -63,7 +63,7 @@
 				}								
 				float param = 0.0;
 				if (!building) {
-					param = x + y - t - abs(sin(radians(x*360)));
+					param = y - t - sin(radians(x*180));
 				}
 				else { 
 					param = x + y + t;

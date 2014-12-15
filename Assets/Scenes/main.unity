@@ -358,7 +358,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 203857277}
   m_RootOrder: 8
---- !u!43 &516601860
+--- !u!43 &566568038
 Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -861,7 +861,7 @@ Prefab:
     - target: {fileID: 3300000, guid: 73a6392d30c937e4ea1b7de0ae115800, type: 2}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 516601860}
+      objectReference: {fileID: 566568038}
     - target: {fileID: 11400000, guid: 73a6392d30c937e4ea1b7de0ae115800, type: 2}
       propertyPath: m_Settings.m_WrapMode
       value: 1
@@ -1648,7 +1648,7 @@ MeshFilter:
     type: 2}
   m_PrefabInternal: {fileID: 1193977863}
   m_GameObject: {fileID: 1430120555}
-  m_Mesh: {fileID: 516601860}
+  m_Mesh: {fileID: 566568038}
 --- !u!4 &1430120560
 Transform:
   m_ObjectHideFlags: 0
@@ -1697,6 +1697,7 @@ MonoBehaviour:
   range: 30
   lastHeight: -5
   cactusProp: .200000003
+  gapProp: .100000001
   reset: 0
 --- !u!4 &1544053871
 Transform:
