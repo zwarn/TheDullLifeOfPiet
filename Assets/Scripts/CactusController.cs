@@ -4,13 +4,12 @@ using System.Collections.Generic;
 public class CactusController : MonoBehaviour
 {
 
-    public float cactusLevel = 0;
+    public float cactusLevel = 0;    
     public float maxCactusLevel = 20;
     public float increaseDelta = 1f;
-    public float decreaseDelta = 0.05f;
-    public float decreaseEverySeconds = 1;
-   
-    private float timeBeforeDecrease;
+    public float decreasePerSecond = 0.1f;           
+    public float smoothness = 3;
+    public float smoothCactusLevel = 0;    
     private static CactusController instance;	
     private HashSet<CactusListener> listeners;         
     
@@ -21,21 +20,18 @@ public class CactusController : MonoBehaviour
     }       
     
     public static float CactusLevel {
-        get {
-            //print ("get CactusLevel");
+        get {            
             return instance.cactusLevel;
         }
         set {
-            instance.SetCactusLevel (value);
+            instance.cactusLevel = value;
         }
     }
     
     void Awake ()
-    {
-        //print ("Awake");
+    {        
         instance = this;
-        listeners = new HashSet<CactusListener> ();
-        timeBeforeDecrease = decreaseEverySeconds;       
+        listeners = new HashSet<CactusListener> ();        
     }
     
     void Start ()
@@ -45,18 +41,16 @@ public class CactusController : MonoBehaviour
     }
 		
     void Update ()
-    {
-        timeBeforeDecrease -= Time.deltaTime;
-        if (timeBeforeDecrease < 0) {
-            timeBeforeDecrease = decreaseEverySeconds;
-            DecreaseCactusLevel (); 
-        }
+    {   
+        DecreaseCactusLevel (decreasePerSecond * Time.deltaTime);     
+        smoothCactusLevel = Mathf.Lerp (smoothCactusLevel, cactusLevel, smoothness * Time.deltaTime);   
+        NotifyListeners ();    
     }    
         
     public void NotifyListeners ()
     {
         foreach (CactusListener l in listeners) {
-            l.OnCactusLevelChange (cactusLevel);
+            l.OnCactusLevelChange (smoothCactusLevel);
         } 
     }	   
     
@@ -69,22 +63,15 @@ public class CactusController : MonoBehaviour
     {    
         listeners.Remove (l);
     }
-    
-    void SetCactusLevel (float level)
-    {
-        if (cactusLevel != level) {
-            cactusLevel = level;
-            NotifyListeners ();
-        }
-    }        
+                
     
     public static void IncreaseCactusLevel ()
     {        
         CactusLevel = (Mathf.Min (CactusLevel + instance.increaseDelta, instance.maxCactusLevel));        
     }
     
-    void DecreaseCactusLevel ()
+    void DecreaseCactusLevel (float amount)
     {        
-        CactusLevel = (Mathf.Max (cactusLevel - decreaseDelta, 0));        
+        CactusLevel = (Mathf.Max (cactusLevel - amount, 0));        
     }
 }

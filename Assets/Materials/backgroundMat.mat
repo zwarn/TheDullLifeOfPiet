@@ -27,6 +27,26 @@ Material:
         second: 0
       data:
         first:
+          name: _XS
+        second: 5
+      data:
+        first:
+          name: _YS
+        second: .100000001
+      data:
+        first:
+          name: _Speed
+        second: 1.39999938
+      data:
+        first:
+          name: _TimeArg
+        second: 30.4587994
+      data:
+        first:
+          name: _Intensity
+        second: 0
+      data:
+        first:
           name: _PerSec
         second: 1
       data:
@@ -41,26 +61,6 @@ Material:
         first:
           name: _PerY
         second: 1.70000005
-      data:
-        first:
-          name: _XS
-        second: 5
-      data:
-        first:
-          name: _YS
-        second: .100000001
-      data:
-        first:
-          name: _Speed
-        second: 1.39999938
-      data:
-        first:
-          name: _TimeArg
-        second: 19.8359833
-      data:
-        first:
-          name: _Intensity
-        second: 0
     m_Colors:
       data:
         first:
