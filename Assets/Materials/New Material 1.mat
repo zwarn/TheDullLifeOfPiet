@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: New Material 1
-  m_Shader: {fileID: 30, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 50e258fe0f6db4ab88082af5bb76b84a, type: 3}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -37,8 +37,8 @@ Material:
     m_Floats:
       data:
         first:
-          name: _Speed
-        second: 1
+          name: PixelSnap
+        second: 0
       data:
         first:
           name: _XS
@@ -49,12 +49,24 @@ Material:
         second: .0799999982
       data:
         first:
-          name: _Parallax
-        second: .0199999996
+          name: _Speed
+        second: 1.39999938
       data:
         first:
           name: _ColorSpeed
         second: .300000012
+      data:
+        first:
+          name: _Parallax
+        second: .0199999996
+      data:
+        first:
+          name: _TimeArg
+        second: 23.7270241
+      data:
+        first:
+          name: _Intensity
+        second: 0
     m_Colors:
       data:
         first:

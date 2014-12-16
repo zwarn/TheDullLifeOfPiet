@@ -1,49 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Rainbowify : MonoBehaviour
+[System.Serializable]
+public struct Prop
 {
+    public string name;
+    public float value;
+}
 
-		public Material targetMaterial;
-		public Material[] warpMaterials;
-		private Shader normalShader;
-		private Shader rainbowShader;
-		private Shader warpShader;
+public class Rainbowify : CactusScaler
+{
+    public Material targetMaterial;		
+    public float minAnimationSpeed = 0.2f;
+    public float maxAnimationSpeed = 1;                   
+    public float animationSpeed = 1;		
+    public float time = 0;    
+    private float getLowAt;
+    private int timeID;
+    private int intensityID;
 
-		// Use this for initialization
-		void Start ()
-		{
-				normalShader = Shader.Find ("Transparent/Diffuse");
-				rainbowShader = Shader.Find ("rainbow");
-				warpShader = Shader.Find ("Rainwarp");				
-		}
-	
-		void OnDestroy ()
-		{
-				NoRainbows ();
-		}
-		
-		public void Rainbows ()
-		{					
-				targetMaterial.shader = rainbowShader;			
-				foreach (Material m in warpMaterials) {				
-						m.shader = warpShader;
-				}						
-		}
-		
-		public void SetSpeed (float speed)
-		{
-				targetMaterial.SetFloat ("_Speed", speed);			
-		}
-	
-		public void NoRainbows ()
-		{
-				targetMaterial.shader = normalShader;
-				//targetMaterial.shader = rainbowShader;
-				foreach (Material m in warpMaterials) {						
-						m.shader = normalShader;
-				}		
-		}
-		
-		
+    void Start ()
+    {
+        timeID = Shader.PropertyToID ("_TimeArg");
+        intensityID = Shader.PropertyToID ("_Intensity");                
+    }      
+
+    void Update ()
+    {
+        time += animationSpeed * Time.deltaTime;
+        targetMaterial.SetFloat (timeID, time);        
+    }
+
+    public override void OnIntensity (float scaledLevel)
+    {        
+        targetMaterial.SetFloat (intensityID, scaledLevel);
+        animationSpeed = minAnimationSpeed + scaledLevel * (maxAnimationSpeed - minAnimationSpeed);
+    }
+    
+    void OnDestroy ()
+    {
+        OnIntensity (0);
+    }
 }

@@ -7,6 +7,8 @@
 		_PerY ("Rainbows per y", Float) = 1.3	
 		_XS ("Warp X Scale", Float) = 6.29
 		_YS ("Warp Y Scale", Float) = 1.0
+        _TimeArg ("Time argument", Float) = 0
+        _Intensity ("Intensity argument", Float) = 0
 		_Speed ("Warp Speed", Float) = 1.0
 	}
 	 
@@ -26,7 +28,8 @@
 			float _PerY;
 			float _XS;
 			float _YS;
-			float _Speed;
+			float _TimeArg;
+            float _Intensity;
 			
 			struct inV {
 				float4 v : POSITION;
@@ -48,11 +51,11 @@
 		float4 frag(outV i) : COLOR {
 				float2 xy = i.tex.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				float distort = cos(xy.x*_XS);
-				float timeFactor = sin(_Time.y * _Speed);
-				xy += float2(0.0, distort*_YS*timeFactor);
+				float timeFactor = sin(radians(_TimeArg*360));
+				xy += float2(0.0, distort*_YS*timeFactor*_Intensity);
 				float4 tex = tex2D(_MainTex, saturate(xy));
 				bool building = (tex.w > 0.8);
-				float t = - _Time.y * _PerSec;
+				float t = _TimeArg * _PerSec;
 				float y = i.tex.y * _PerY;
 				float x;
 				if (building) {
@@ -68,11 +71,13 @@
 				else { 
 					param = x + y + t;
 				}
-				float3 rgb = toRainbowRGB(param);
-				if (building) {
-					rgb*=0.7;
-				}
-				return float4(rgb, 1.0);
+				float3 rgb = toRainbowRGB(param);               
+                if (building) {
+                    rgb*=0.7;
+                }
+                float fg = 0.4;
+                float3 grey = building? float3(fg,fg,fg) : float3(0,0,0);				
+				return float4(lerp(grey, rgb, _Intensity), 1.0);
 		}
 			
 			ENDCG

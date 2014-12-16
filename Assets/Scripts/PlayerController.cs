@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
         rigidbody2D.velocity = new Vector2 (Input.GetAxis ("Horizontal") * Speed * Time.deltaTime,
 		                                   rigidbody2D.velocity.y);
 
-        RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector3.down, 1.45f, 1 << LayerMask.NameToLayer ("Map"));
+        RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector3.down, 0.8f, 1 << LayerMask.NameToLayer ("Map"));
         if (hit.collider != null) {
             onGround = true;
         } else {
@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
     void EatCactus (GameObject cactus)
     {
         GameObject.Destroy (cactus);
-        CactusController.CactusLevel += 1;        
+        CactusController.IncreaseCactusLevel ();
     }
 
     void OnTriggerEnter2D (Collider2D coll)

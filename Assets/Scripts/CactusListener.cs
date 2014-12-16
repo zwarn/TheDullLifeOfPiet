@@ -3,7 +3,7 @@ using System.Collections;
 
 public abstract class CactusListener : MonoBehaviour
 {
-    public abstract void NotifyCactusLevel (float level);
+    public abstract void OnCactusLevelChange (float level);
             
     void OnEnable ()
     {

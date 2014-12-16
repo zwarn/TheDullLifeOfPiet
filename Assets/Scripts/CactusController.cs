@@ -6,6 +6,7 @@ public class CactusController : MonoBehaviour
 
     public float cactusLevel = 0;
     public float maxCactusLevel = 20;
+    public float increaseDelta = 1f;
     public float decreaseDelta = 0.05f;
     public float decreaseEverySeconds = 1;
    
@@ -21,6 +22,7 @@ public class CactusController : MonoBehaviour
     
     public static float CactusLevel {
         get {
+            //print ("get CactusLevel");
             return instance.cactusLevel;
         }
         set {
@@ -30,9 +32,16 @@ public class CactusController : MonoBehaviour
     
     void Awake ()
     {
+        //print ("Awake");
         instance = this;
         listeners = new HashSet<CactusListener> ();
         timeBeforeDecrease = decreaseEverySeconds;       
+    }
+    
+    void Start ()
+    {
+        //print ("Start");
+        NotifyListeners ();
     }
 		
     void Update ()
@@ -40,21 +49,19 @@ public class CactusController : MonoBehaviour
         timeBeforeDecrease -= Time.deltaTime;
         if (timeBeforeDecrease < 0) {
             timeBeforeDecrease = decreaseEverySeconds;
-            DecreaseCactusLevel ();
+            DecreaseCactusLevel (); 
         }
     }    
         
     public void NotifyListeners ()
     {
-        print ("Notifying");
         foreach (CactusListener l in listeners) {
-            l.NotifyCactusLevel (cactusLevel);
+            l.OnCactusLevelChange (cactusLevel);
         } 
     }	   
     
     public void Register (CactusListener l)
     {
-        print ("Registered " + l);
         listeners.Add (l); 
     }
     
@@ -69,15 +76,15 @@ public class CactusController : MonoBehaviour
             cactusLevel = level;
             NotifyListeners ();
         }
-    }
+    }        
     
-    public void IncreaseCactusLevel (float delta)
+    public static void IncreaseCactusLevel ()
     {        
-        SetCactusLevel (Mathf.Min (cactusLevel + delta, maxCactusLevel));        
+        CactusLevel = (Mathf.Min (CactusLevel + instance.increaseDelta, instance.maxCactusLevel));        
     }
     
     void DecreaseCactusLevel ()
     {        
-        SetCactusLevel (Mathf.Max (cactusLevel - decreaseDelta, 0));        
+        CactusLevel = (Mathf.Max (cactusLevel - decreaseDelta, 0));        
     }
 }
