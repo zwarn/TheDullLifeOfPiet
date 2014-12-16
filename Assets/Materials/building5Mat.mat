@@ -62,7 +62,7 @@ Material:
       data:
         first:
           name: _TimeArg
-        second: 34.7111702
+        second: 0
       data:
         first:
           name: _Intensity

@@ -40,5 +40,6 @@ public class Rainbowify : CactusScaler
     void OnDestroy ()
     {
         OnIntensity (0);
+        targetMaterial.SetFloat (timeID, 0);        
     }
 }

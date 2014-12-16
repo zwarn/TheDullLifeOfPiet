@@ -40,14 +40,14 @@ public class PlayerController : MonoBehaviour
             }
         }
         
-        if (transform.position.y < -15) {
+        if (transform.position.y < -20) {
             Die ();
         }
     }
 
     void Die ()
     {
-        transform.position = new Vector2 (transform.position.x - 2, 15);
+        transform.position = new Vector2 (transform.position.x - 2, 20);
         rigidbody2D.velocity = new Vector2 (0, 0);
         CactusController.CactusLevel = 0;
     }
