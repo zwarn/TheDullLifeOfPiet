@@ -22,12 +22,12 @@ public class PlayerController : MonoBehaviour
     }
     public bool onGround = false;
 	
-    void FixedUpdate ()
+    void Update ()
     {
         rigidbody2D.velocity = new Vector2 (Input.GetAxis ("Horizontal") * Speed * Time.deltaTime,
-		                                   rigidbody2D.velocity.y);
+                                            rigidbody2D.velocity.y);
 
-        RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector3.down, 0.8f, 1 << LayerMask.NameToLayer ("Map"));
+        RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector3.down, 0.9f, 1 << LayerMask.NameToLayer ("Map"));
         if (hit.collider != null) {
             onGround = true;
         } else {
@@ -39,6 +39,17 @@ public class PlayerController : MonoBehaviour
                 rigidbody2D.AddForce (Vector3.up * Jumppower);
             }
         }
+        
+        if (transform.position.y < -15) {
+            Die ();
+        }
+    }
+
+    void Die ()
+    {
+        transform.position = new Vector2 (transform.position.x - 2, 15);
+        rigidbody2D.velocity = new Vector2 (0, 0);
+        CactusController.CactusLevel = 0;
     }
 
     void EatCactus (GameObject cactus)
