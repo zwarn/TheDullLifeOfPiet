@@ -56,12 +56,34 @@ public class LevelCreator : MonoBehaviour
 		GameObject newObj = (GameObject) Instantiate (chunk.instance, new Vector3(toCreate, lastHeight , 0), Quaternion.identity);
 		newObj.transform.parent = map.transform;
 
-		for (int i = 0; i < chunk.width; i++) {
+		Rect bounds = new Rect ();
+
+		foreach (Transform child in newObj.transform) {
+			if (LayerMask.LayerToName(child.gameObject.layer) == "Map") {
+				float x = child.gameObject.transform.localPosition.x;
+				float y = child.gameObject.transform.localPosition.y;
+
+				if (x < bounds.xMin) {
+					bounds.xMin = x;
+					bounds.yMin = y;
+				}
+
+				if (x > bounds.xMax) {
+					bounds.xMax = x;
+					bounds.yMax = y;
+				}
+			}
+		}
+
+		int width = (int) bounds.width + 1;
+		int deltaHeight = (int) bounds.height;
+
+		for (int i = 0; i < width; i++) {
 			heightmap.Add(lastHeight);
 		}
 
-		lastHeight += chunk.deltaHeight + Random.Range(-1,2);
-		toCreate += chunk.width;
+		lastHeight += deltaHeight + Random.Range(-1,2);
+		toCreate += width;
 
 
 
@@ -106,8 +128,6 @@ public class LevelCreator : MonoBehaviour
 
 	[System.Serializable]
 	public class Chunk {
-		public int width = 1;
-		public int deltaHeight = 0;
 		public int abundance = 1;
 		public GameObject instance;
 	}
