@@ -1,91 +1,114 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
+using System.IO;
+using System.Linq;
 
+[ExecuteInEditMode]
 public class LevelCreator : MonoBehaviour
 {
 
-    public GameObject block;
-    public GameObject player;
-    public GameObject map;
-    public GameObject cactus;
+	public GameObject map;
+	public GameObject player;
 
     public int toCreate = 3;
     public float size = 1f;    
     public int range = 30;	
-    public float cactusProp = 0.01f;
-    public float gapProp = 0.1f;
     public int minHeight = -15;
     public int maxHeight = 15;
 
-    public bool reset = false;
+	public List<Chunk> chunks;
+
+    public bool recreate = false;
     
+	private static LevelCreator _instance;
     private int lastHeight = 0;
+	private List<int> heightmap;
+	private int sumAbundance;
 
-
-    // Use this for initialization
-    void Start ()
+    void Awake ()
     {
-        resetMap ();
-        while (player.transform.position.x + range > toCreate) {
-            createBlock ();
-        }
-
+		_instance = this;
     }
-	
+
+	public static LevelCreator Instance {
+		get {return _instance;}
+	}
+
     // Update is called once per frame
     void Update ()
     {
-        if (reset) {
+        if (recreate) {
             resetMap ();
-            reset = false;
+            recreate = false;
         }
+
         while (player.transform.position.x + range > toCreate) {
-            createBlock ();
+			InstantiateChunk ();
         }
     }
 
+	private void InstantiateChunk() {
 
-    public void createBlock ()
-    {
+		Chunk chunk = ChunkSelection ();
 
-        float value = Random.Range (0f, 1f);
-        int delta = 0;
+		GameObject newObj = (GameObject) Instantiate (chunk.instance, new Vector3(toCreate, lastHeight , 0), Quaternion.identity);
+		newObj.transform.parent = map.transform;
 
-        if (value < 0.2f && lastHeight != minHeight) {
-            delta = -1;
-        } else if (value < 0.4f && lastHeight != maxHeight) {
-            delta = 1;
-        } else { 
-            delta = 0;
-        }
+		for (int i = 0; i < chunk.width; i++) {
+			heightmap.Add(lastHeight);
+		}
 
-        value = Random.Range (0f, 1f);
-        if (value < gapProp) {
+		lastHeight += chunk.deltaHeight + Random.Range(-1,2);
+		toCreate += chunk.width;
 
-        } else {
-            GameObject blockObject = (GameObject)Instantiate (block, new Vector3 (toCreate, lastHeight + delta, 0), Quaternion.identity);
-            blockObject.name = "Block";
-            blockObject.transform.parent = map.transform;
-			
-            value = Random.Range (0f, 1f);
-            if (value < cactusProp) {
-                GameObject cactusObject = (GameObject)Instantiate (cactus, new Vector3 (toCreate, lastHeight + delta + 1, 0), Quaternion.identity);
-                cactusObject.name = "Block";
-                cactusObject.transform.parent = map.transform;
-            }
-        }
 
-        lastHeight = lastHeight + delta;
-        toCreate++;
 
-    }
+	}
+
+	private Chunk ChunkSelection() {
+		int value = Random.Range (0, sumAbundance);
+		float acc = 0;
+
+		foreach (Chunk chunk in chunks) {
+			acc += chunk.abundance;
+			if (acc >= value) return chunk;
+		}
+
+		Debug.LogError ("Should not happen");
+		return chunks.Last();
+	}
 
     public void resetMap ()
     {
-        for (int i = 0; i < map.transform.childCount; i++) {
-            Destroy (map.transform.GetChild (i).gameObject);
+		while ( map.transform.childCount > 0) {
+            DestroyImmediate (map.transform.GetChild (0).gameObject);
         }
         toCreate = 0;
         lastHeight = 0;
-    }
+		heightmap = new List<int> ();
+		sumAbundance = 0;
+		foreach (Chunk chunk in chunks) {
+			sumAbundance += chunk.abundance;
+		}
+
+	}
+
+	public float GetTerrainHeight (int i)
+	{
+		if (i <= 0 || i >= heightmap.Count)
+						return 0;
+		else {
+			return heightmap[i];
+		}
+	}
+
+	[System.Serializable]
+	public class Chunk {
+		public int width = 1;
+		public int deltaHeight = 0;
+		public int abundance = 1;
+		public GameObject instance;
+	}
 }
